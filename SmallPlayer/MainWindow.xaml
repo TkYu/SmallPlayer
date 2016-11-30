@@ -1,0 +1,109 @@
+﻿<wpfSpark:SparkWindow x:Class="SmallPlayer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SmallPlayer"
+        xmlns:wpfSpark="clr-namespace:WPFSpark;assembly=WPFSpark"
+        xmlns:wpfSoundVisualizationLib="clr-namespace:WPFSoundVisualizationLib;assembly=WPFSoundVisualizationLib"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
+        Title="Small Player" FontFamily="{DynamicResource UIFont}" Height="192" Width="433">
+    <wpfSpark:SparkWindow.Resources>
+        <wpfSpark:BooleanToVisibilityConverter x:Key="BooleanToVisibilityHelper" />
+        <wpfSpark:BooleanToVisibilityConverter x:Key="BooleanToVisibilityNegationHelper" IsReverse="True" />
+    </wpfSpark:SparkWindow.Resources>
+    <wpfSpark:SparkWindow.TitleEffect>
+        <DropShadowEffect BlurRadius="16"
+                          Color="#FFFFFF"
+                          Direction="0"
+                          ShadowDepth="1"
+                          RenderingBias="Quality" />
+    </wpfSpark:SparkWindow.TitleEffect>
+    <wpfSpark:SparkWindow.TitleImage>
+        <Image Source="/SmallPlayer;component/Resources/Icons/play.ico"
+               Width="24"
+               Height="24"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center" />
+    </wpfSpark:SparkWindow.TitleImage>
+    <Grid x:Name="RootGrid" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <wpfSoundVisualizationLib:AlbumArtDisplay x:Name="albumArtPanel" AlbumArtImage="{Binding AlbumImage}" Margin="5" MinWidth="50" MinHeight="50"/>
+            <wpfSoundVisualizationLib:WaveformTimeline Grid.Column="1" x:Name="waveformTimeline" Margin="5" MinHeight="60" BorderThickness="1" />
+        </Grid>
+        <Grid Grid.Row="1" Height="60">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="100" />
+            </Grid.ColumnDefinitions>
+
+            <Button Margin="15,10,10,10" Width="30" Height="30" Command="{Binding PlayCommand}" Style="{DynamicResource PlayPauseStopButtonStyle}">
+                <Grid>
+                    <Grid Height="25" Name="gridPauseButton" Visibility="{Binding Path=CanPause, Converter={StaticResource BooleanToVisibilityHelper}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="6" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{StaticResource darkestGray}" Grid.Column="1" CornerRadius="4" />
+                        <Border Background="{StaticResource darkestGray}" Grid.Column="3" CornerRadius="4" />
+                    </Grid>
+                    <Grid Height="25" Name="gridPlayButton" Visibility="{Binding Path=CanPlay, Converter={StaticResource BooleanToVisibilityHelper}}">
+                        <Path Fill="{StaticResource darkestGray}" Margin="3,0,7,0" Stretch="Fill">
+                            <Path.Data>
+                                <GeometryGroup>
+                                    <PathGeometry>
+                                        <PathFigure StartPoint="0 0">
+                                            <LineSegment Point="38 25" />
+                                            <LineSegment Point="0 50" />
+                                        </PathFigure>
+                                    </PathGeometry>
+                                </GeometryGroup>
+                            </Path.Data>
+                        </Path>
+                    </Grid>
+                </Grid>
+            </Button>
+
+            <Button Margin="0 10 10 10" Width="30" Height="30" Grid.Column="1" Command="{Binding StopCommand}" Style="{DynamicResource PlayPauseStopButtonStyle}">
+                <Grid Height="25">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="25" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Border Background="{StaticResource darkestGray}" Grid.Column="1" CornerRadius="4" />
+                </Grid>
+            </Button>
+
+            <Rectangle Grid.Column="2" Fill="{StaticResource darkerGray}" Width="1" Margin="0 16 16 16" />
+            <wpfSoundVisualizationLib:SpectrumAnalyzer  Grid.Column="3"  x:Name="spectrumAnalyzer"
+                                  Margin="5"
+                                  BarCount="16" />
+            <StackPanel Orientation="Vertical"
+                        VerticalAlignment="Center"
+                        Grid.Column="4">
+                <wpfSoundVisualizationLib:TimeEditor Margin="5"
+                                Name="repeatStartTimeEdit" Value="{Binding SelectionBegin,Mode=TwoWay}"
+                                IsReadOnly="True" />
+                <wpfSoundVisualizationLib:TimeEditor Margin="5"
+                                Name="repeatStopTimeEdit" Value="{Binding SelectionEnd,Mode=TwoWay}"
+                                IsReadOnly="True" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</wpfSpark:SparkWindow>
+
